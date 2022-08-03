@@ -12,7 +12,7 @@ class CreateEvent
         public readonly string $eventName,
         public readonly string $location,
         public readonly Carbon $date,
-        public readonly int $capacity = 0,
+        public readonly int $capacity,
     )
     {
     }

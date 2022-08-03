@@ -2,7 +2,6 @@
 
 namespace Domains\Registration\Repositories;
 
-use Domains\Registration\Capacity;
 use Domains\Registration\Entities\Attendee;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +10,7 @@ class AttendeeRepository
     public function getById(string $attendeeId): Attendee
     {
         $row = DB::table('attendees')->where('id', $attendeeId)->first();
-        if($row){
+        if ($row) {
             return Attendee::fromPayload(json_decode($row->payload, true));
         }
         return Attendee::newWithId($attendeeId);

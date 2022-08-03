@@ -14,7 +14,6 @@ class RegistrationServiceProvider extends ServiceProvider
         $this->app->register(RegistrationEventServiceProvider::class);
 
 
-
         /** @var InMemoryLocator $locator */
         $locator = $this->app->make(InMemoryLocator::class);
         $locator->addHandler($this->app->make(RegistrationCommandHandler::class), RegisterAttendee::class);

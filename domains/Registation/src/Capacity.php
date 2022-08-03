@@ -7,7 +7,7 @@ use Domains\Registration\Exceptions\CapacityIsFull;
 class Capacity
 {
     public function __construct(
-        public readonly int $totalCapacity,
+        public      readonly int $totalCapacity,
         private int $reservedCapacity)
     {
     }
@@ -17,7 +17,7 @@ class Capacity
      */
     public function reserve()
     {
-        if($this->reservedCapacity >= $this->totalCapacity) {
+        if ($this->reservedCapacity >= $this->totalCapacity) {
             throw new CapacityIsFull();
         }
         $this->reservedCapacity++;
