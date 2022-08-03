@@ -1,10 +1,8 @@
 <?php
 
-namespace Domains\Registration\Events;
+namespace Domains\Attendance\Commands;
 
-use App\PublicEvent;
-
-class AttendeeRegistered implements PublicEvent
+class EnterAttendee
 {
     public function __construct(
         public readonly string $eventId,

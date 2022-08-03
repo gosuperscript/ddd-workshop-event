@@ -197,6 +197,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         \App\Providers\CommandBusServiceProvider::class,
+        \Domains\Attendance\Providers\AttendanceServiceProvider::class,
         \Domains\Event\Providers\EventServiceProvider::class,
         \Domains\Registration\Providers\RegistrationServiceProvider::class,
 

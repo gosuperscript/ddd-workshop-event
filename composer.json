@@ -27,6 +27,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
+            "Domains\\Attendance\\": "domains/Attendance/src/",
             "Domains\\Event\\": "domains/Event/src/",
             "Domains\\Registration\\": "domains/Registation/src/",
             "Database\\Factories\\": "database/factories/",
@@ -36,6 +37,7 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
+            "Domains\\Attendance\\Tests\\": "domains/Attendance/tests/",
             "Domains\\Event\\Tests\\": "domains/Event/tests/",
             "Domains\\Registation\\Tests\\": "domains/Registation/tests/"
         }

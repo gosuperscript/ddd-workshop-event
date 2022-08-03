@@ -2,6 +2,9 @@
 
 use Behat\Behat\Context\Context;
 use Carbon\Carbon;
+use Domains\Attendance\Commands\EnterAttendee;
+use Domains\Attendance\Events\AttendeeIsBounced;
+use Domains\Attendance\Events\AttendeeIsWelcomed;
 use Domains\Event\Commands\CreateEvent;
 use Domains\Event\Commands\PublishEvent;
 use Domains\Event\Events\EventPublished;
@@ -131,5 +134,49 @@ class FeatureContext extends TestCase implements Context
     public function iShouldNotBeRegistered()
     {
         $this->assertContains(AttendeeNotRegistered::class, $this->events);
+    }
+
+    /**
+     * @Given an attendee is registered
+     */
+    public function anAttendeeIsRegistered()
+    {
+        event(new AttendeeRegistered(
+            $this->eventId,
+            $this->attendeeId
+        ));
+    }
+
+    /**
+     * @Given an attendee was never registered
+     */
+    public function anAttendeeWasNeverRegistered()
+    {
+    }
+
+    /**
+     * @When the attendee wants to enter
+     */
+    public function theAttendeeWantsToEnter()
+    {
+        $this->commandBus->handle(new EnterAttendee($this->eventId, $this->attendeeId));
+    }
+
+    /**
+     * @Then the attendee is welcomed
+     */
+    public function theAttendeeIsWelcomed()
+    {
+        $this->assertContains(AttendeeIsWelcomed::class, $this->events);
+        $this->assertNotContains(AttendeeIsBounced::class, $this->events);
+    }
+
+    /**
+     * @Then the attendee is bounced
+     */
+    public function theAttendeeIsBounced()
+    {
+        $this->assertNotContains(AttendeeIsWelcomed::class, $this->events);
+        $this->assertContains(AttendeeIsBounced::class, $this->events);
     }
 }
