@@ -1,6 +1,8 @@
 <?php
 
 use Behat\Behat\Context\Context;
+use Carbon\Carbon;
+use Domains\Event\Commands\CreateEvent;
 use Domains\Event\Commands\PublishEvent;
 use Domains\Event\Events\EventPublished;
 use Domains\Registration\Commands\RegisterAttendee;
@@ -10,11 +12,13 @@ use Domains\Registration\Events\AvailableCapacityReduced;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use League\Tactician\CommandBus;
+use Ramsey\Uuid\Uuid;
+use Tests\TestCase;
 
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext extends \Tests\TestCase implements Context
+class FeatureContext extends TestCase implements Context
 {
     use RefreshDatabase;
 
@@ -37,9 +41,9 @@ class FeatureContext extends \Tests\TestCase implements Context
         parent::__construct();
         parent::setUp();
 
-        $this->eventId = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $this->organizationId = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $this->attendeeId = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        $this->eventId = Uuid::uuid4()->toString();
+        $this->organizationId = Uuid::uuid4()->toString();
+        $this->attendeeId = Uuid::uuid4()->toString();
 
         $this->commandBus = resolve(CommandBus::class);
         Event::listen('*', function ($event) {
@@ -52,18 +56,18 @@ class FeatureContext extends \Tests\TestCase implements Context
      */
     public function iCreatedAnEventWithName($eventName)
     {
-        $this->commandBus->handle(new \Domains\Event\Commands\CreateEvent(
+        $this->commandBus->handle(new CreateEvent(
             $this->eventId,
             $this->organizationId,
             $eventName,
             'Amsterdam, Netherlands',
-            new \Carbon\Carbon('2022-09-09'),
+            new Carbon('2022-09-09'),
             10000
         ));
     }
 
     /**
-     * @When /^I publish the event$/
+     * @When I publish the event
      */
     public function iPublishTheEvent()
     {
@@ -71,7 +75,7 @@ class FeatureContext extends \Tests\TestCase implements Context
     }
 
     /**
-     * @Then /^I should see the event published$/
+     * @Then I should see the event published
      */
     public function iShouldSeeTheEventPublished()
     {
@@ -90,7 +94,7 @@ class FeatureContext extends \Tests\TestCase implements Context
     }
 
     /**
-     * @When /^I register myself$/
+     * @When I register myself
      */
     public function iRegisterMyself()
     {
@@ -98,7 +102,7 @@ class FeatureContext extends \Tests\TestCase implements Context
     }
 
     /**
-     * @Then /^I should be registered$/
+     * @Then I should be registered
      */
     public function iShouldBeRegistered()
     {
@@ -106,30 +110,26 @@ class FeatureContext extends \Tests\TestCase implements Context
     }
 
     /**
-     * @Given /^The capacity should be reduced by (\d+)$/
+     * @Given The capacity should be reduced by 1
      */
-    public function theCapacityShouldBeReducedBy($arg1)
+    public function theCapacityShouldBeReducedBy()
     {
-        $this->assertContains(AttendeeRegistered::class, $this->events);
+        $this->assertContains(AvailableCapacityReduced::class, $this->events);
     }
 
     /**
-     * @Given /^And there is a registration$/
+     * @Given And there is a registration
      */
     public function andThereIsARegistration()
     {
-        $this->commandBus->handle(new RegisterAttendee($this->eventId, \Ramsey\Uuid\Uuid::uuid4()->toString(), "Random guest" . random_int(1, 100)));
+        $this->commandBus->handle(new RegisterAttendee($this->eventId, Uuid::uuid4()->toString(), "Random guest" . random_int(1, 100)));
     }
 
     /**
-     * @Then /^I should not be registered$/
+     * @Then I should not be registered
      */
     public function iShouldNotBeRegistered()
     {
         $this->assertContains(AttendeeNotRegistered::class, $this->events);
     }
-
-
-
-
 }
