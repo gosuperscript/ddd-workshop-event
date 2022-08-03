@@ -3,10 +3,12 @@
 namespace App\Http\Livewire\Events;
 
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Auth;
 use League\Tactician\CommandBus;
 use Livewire\Component;
+use Ramsey\Uuid\Uuid;
 
 class CreateEvent extends Component
 {
@@ -31,17 +33,17 @@ class CreateEvent extends Component
     {
         $this->validate();
 
-//        $event = Event::create([
-//            'name' => $this->name,
-//            'location' => $this->location,
-//            'date' => $this->date,
-//            'capacity' => $this->capacity,
-//        ]);
-//
-//        $dispatcher->dispatch(EventCreated::fromEvent($event));
-        $commandBus->handle(new \Domains\Event\Commands\CreateEvent($this->name, Auth::user()->organization_id));
-        // properties can be accessed like this: $this->name
-        throw new \Exception('Not implemented yet');
+        $eventId = Uuid::uuid4()->toString();
+        $commandBus->handle(new \Domains\Event\Commands\CreateEvent(
+            $eventId,
+            Auth::user()->organization_id,
+            $this->name,
+            $this->location,
+            Carbon::parse($this->date),
+            $this->capacity
+        ));
+
+        $this->redirectRoute('events.list');
     }
 
     public function render()
