@@ -16,7 +16,9 @@ class Event extends Model
     protected static function booted()
     {
         static::addGlobalScope('owned_by_organization', function (Builder $builder) {
-            $builder->where('organization_id', auth()->user()->organization_id);
+            $builder->when(auth()->user() !== null, function (Builder $builder){
+                $builder->where('organization_id', auth()->user()->organization_id);
+            });
         });
         parent::booted();
     }
