@@ -36,13 +36,13 @@ Route::middleware([
         Route::get('/create', CreateEvent::class)->name('events.create');
     });
 
-    Route::prefix('registration')->group(function () {
-        Route::get('/{event_id}', Register::class)->name('registration.register');
-        Route::get('/attendee/{attendee_id}', Attendee::class)->name('registration.attendee');
-    });
-
     Route::prefix('attendance')->group(function () {
         Route::get('/checkin/{event_id}', CheckIn::class)->name('attendance.checkin');
     });
 
+});
+
+Route::prefix('registration')->group(function () {
+    Route::get('/{event_id}', Register::class)->name('registration.register');
+    Route::get('/attendee/{attendee_id}', Attendee::class)->name('registration.attendee');
 });
