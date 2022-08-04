@@ -65,4 +65,14 @@ class Attendee
     {
         $this->name = $name;
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function attendingEvents(): array
+    {
+        return array_keys($this->attendingEvents);
+    }
 }

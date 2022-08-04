@@ -2,8 +2,8 @@
 
 namespace Domains\Event\Events;
 
-use App\Models\Event;
 use App\PublicEvent;
+use Domains\Event\Event;
 
 class EventPublished implements PublicEvent
 {

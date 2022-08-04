@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
              'password' => bcrypt('secret'),
          ]);
 
-         \App\Models\Event::factory(4)->create(['organization_id' => $user->organization_id]);
+         \Domains\Event\Event::factory(4)->create(['organization_id' => $user->organization_id]);
     }
 }

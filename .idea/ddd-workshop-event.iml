@@ -11,6 +11,8 @@
       <sourceFolder url="file://$MODULE_DIR$/domains/Registation/tests" isTestSource="true" packagePrefix="Domains\Registation\Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/domains/Attendance/src" isTestSource="false" packagePrefix="Domains\Attendance\" />
+      <sourceFolder url="file://$MODULE_DIR$/domains/Attendance/tests" isTestSource="true" packagePrefix="Domains\Attendance\Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/storage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/type-resolver" />

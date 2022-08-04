@@ -2,14 +2,10 @@
 
 namespace Domains\Attendance\CommandHandlers;
 
-use App\Models\Event;
 use Domains\Attendance\Commands\EnterAttendee;
 use Domains\Attendance\Events\AttendeeIsBounced;
 use Domains\Attendance\Events\AttendeeIsWelcomed;
 use Domains\Attendance\Repositories\AttendanceRepository;
-use Domains\Event\Commands\CreateEvent;
-use Domains\Event\Commands\PublishEvent;
-use Domains\Event\Events\EventPublished;
 
 class AttendanceCommandHandler
 {

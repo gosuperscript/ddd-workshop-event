@@ -2,9 +2,9 @@
 
 namespace Domains\Event\CommandHandlers;
 
-use App\Models\Event;
 use Domains\Event\Commands\CreateEvent;
 use Domains\Event\Commands\PublishEvent;
+use Domains\Event\Event;
 use Domains\Event\Events\EventPublished;
 
 class EventCommandHandler

@@ -22,9 +22,7 @@
                         <div class="sm:col-span-4">
                             <label for="username" class="block text-sm font-medium text-gray-700"> event name @error('name') <span class="text-red-500">{{ $message }}</span> @enderror</label>
                             <div class="mt-1 flex rounded-md shadow-sm">
-                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> {{url('/')}}/ </span>
                                 <input wire:model="name" type="text" name="eventname" id="eventname" autocomplete="eventname" class="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300">
-
                             </div>
                         </div>
                         <div class="sm:col-span-2">

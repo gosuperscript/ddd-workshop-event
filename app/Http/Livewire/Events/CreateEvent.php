@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Events;
 
-use App\Models\Event;
 use Carbon\Carbon;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Auth;
 use League\Tactician\CommandBus;
 use Livewire\Component;

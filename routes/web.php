@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Livewire\Attendance\CheckIn;
+use App\Http\Livewire\Events\CreateEvent;
 use App\Http\Livewire\Events\EventsList;
+use App\Http\Livewire\Registration\Attendee;
+use App\Http\Livewire\Registration\Register;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +33,16 @@ Route::middleware([
 
     Route::prefix('events')->group(function () {
         Route::get('/', EventsList::class)->name('events.list');
-        Route::get('/create', \App\Http\Livewire\Events\CreateEvent::class)->name('events.create');
+        Route::get('/create', CreateEvent::class)->name('events.create');
+    });
+
+    Route::prefix('registration')->group(function () {
+        Route::get('/{event_id}', Register::class)->name('registration.register');
+        Route::get('/attendee/{attendee_id}', Attendee::class)->name('registration.attendee');
+    });
+
+    Route::prefix('attendance')->group(function () {
+        Route::get('/checkin/{event_id}', CheckIn::class)->name('attendance.checkin');
     });
 
 });

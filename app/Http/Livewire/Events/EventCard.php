@@ -2,9 +2,8 @@
 
 namespace App\Http\Livewire\Events;
 
-use App\Models\Event;
 use Domains\Event\Commands\PublishEvent;
-use Domains\Event\Events\EventPublished;
+use Domains\Event\Event;
 use League\Tactician\CommandBus;
 use Livewire\Component;
 

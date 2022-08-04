@@ -38,7 +38,8 @@ class RegistrationCommandHandler
 
         event(new AttendeeRegistered(
             $command->eventId,
-            $command->attendeeId
+            $command->attendeeId,
+            $command->name,
         ));
 
         event(new AvailableCapacityReduced($command->eventId));
