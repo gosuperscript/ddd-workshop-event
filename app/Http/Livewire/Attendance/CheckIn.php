@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Attendance;
 
 use Domains\Attendance\Commands\EnterAttendee;
+use Domains\Attendance\Enum\BounceReason;
 use Domains\Attendance\Events\AttendeeIsBounced;
 use Domains\Attendance\Events\AttendeeIsWelcomed;
 use Domains\Event\Event;
@@ -31,8 +32,11 @@ class CheckIn extends Component
     {
         $this->validate();
 
-        \Illuminate\Support\Facades\Event::listen(AttendeeIsBounced::class, function () {
-            $this->message = "You are not allowed to check in to this event.";
+        \Illuminate\Support\Facades\Event::listen(AttendeeIsBounced::class, function (AttendeeIsBounced $event) {
+            match ($event->reason){
+                BounceReason::AlreadyWelcomed => $this->message = 'You have already been welcomed.',
+                BounceReason::NotRegistered => $this->message = 'You are not registered for this event.',
+            };
             $this->error = true;
         });
 
@@ -46,6 +50,7 @@ class CheckIn extends Component
     {
         $this->message = null;
         $this->error = false;
+        unset($this->guestId);
     }
 
     public function render()

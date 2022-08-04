@@ -3,8 +3,10 @@
 namespace Domains\Attendance\CommandHandlers;
 
 use Domains\Attendance\Commands\EnterAttendee;
+use Domains\Attendance\Enum\BounceReason;
 use Domains\Attendance\Events\AttendeeIsBounced;
 use Domains\Attendance\Events\AttendeeIsWelcomed;
+use Domains\Attendance\Exceptions\SorryAlreadyWelcomed;
 use Domains\Attendance\Repositories\AttendanceRepository;
 
 class AttendanceCommandHandler
@@ -18,10 +20,15 @@ class AttendanceCommandHandler
     {
         $attendance = $this->repository->getBy($enterAttendee->eventId, $enterAttendee->attendeeId);
         if (!$attendance) {
-            \event(new AttendeeIsBounced());
+            \event(new AttendeeIsBounced(BounceReason::NotRegistered));
             return;
         }
-        $attendance->welcome();
+        try {
+            $attendance->welcome();
+        } catch (SorryAlreadyWelcomed $alreadyWelcomed) {
+            \event(new AttendeeIsBounced(BounceReason::AlreadyWelcomed));
+            return;
+        }
         $this->repository->save($attendance);
         \event(new AttendeeIsWelcomed());
     }

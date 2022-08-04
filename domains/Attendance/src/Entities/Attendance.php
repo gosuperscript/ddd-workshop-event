@@ -2,6 +2,8 @@
 
 namespace Domains\Attendance\Entities;
 
+use Domains\Attendance\Exceptions\SorryAlreadyWelcomed;
+
 class Attendance
 {
     public function __construct(
@@ -14,6 +16,9 @@ class Attendance
 
     public function welcome(): static
     {
+        if($this->welcomed){
+            throw new SorryAlreadyWelcomed('Already welcomed');
+        }
         $this->welcomed = true;
         return $this;
     }

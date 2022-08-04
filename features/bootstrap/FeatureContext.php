@@ -148,6 +148,14 @@ class FeatureContext extends TestCase implements Context
     }
 
     /**
+     * @Given /^the attendee has already entered$/
+     */
+    public function theAttendeeHasAlreadyEntered()
+    {
+        $this->commandBus->handle(new EnterAttendee($this->eventId, $this->attendeeId));
+    }
+
+    /**
      * @Given an attendee was never registered
      */
     public function anAttendeeWasNeverRegistered()
@@ -159,6 +167,7 @@ class FeatureContext extends TestCase implements Context
      */
     public function theAttendeeWantsToEnter()
     {
+        $this->events = [];
         $this->commandBus->handle(new EnterAttendee($this->eventId, $this->attendeeId));
     }
 

@@ -10,8 +10,9 @@ Feature: Welcoming attendees
 
     Scenario: Attendee had previously entered
         Given an attendee is registered
+        And the attendee has already entered
         When the attendee wants to enter
-        Then the attendee is welcomed
+        Then the attendee is bounced
 
     Scenario: Attendee is not on the list
         Given an attendee was never registered

@@ -3,6 +3,7 @@
 namespace Domains\Event;
 
 use App\HasUuid;
+use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,5 +23,10 @@ class Event extends Model
     public function scopeUpcoming(Builder $builder)
     {
         $builder->where('date', '>=', now());
+    }
+
+    protected static function newFactory()
+    {
+        return EventFactory::new();
     }
 }
