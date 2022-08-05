@@ -17,7 +17,7 @@ class EventPublished implements PublicEvent
     public static function fromEvent(Event $event): static
     {
         return new self(
-            id: $event->id,
+            eventId: $event->id,
             capacity: $event->capacity,
         );
     }
