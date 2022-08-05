@@ -1,0 +1,104 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: password
+      BROADCAST_DRIVER: log
+      CACHE_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: laravel
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      redis:
+        image: redis
+        ports:
+          - 6379/tcp
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [8.1]
+        composer-flags: [ '' ]
+        stability: ['prefer-stable']
+        experimental: [false]
+        include:
+          - php: 8.1
+            stability: 'prefer-stable'
+            composer-flags: '--ignore-platform-reqs'
+            experimental: true
+
+    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip
+          coverage: xdebug
+
+      - name: Start mysql service
+        run: sudo systemctl start mysql
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ matrix.stability }}-
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer update --${{ matrix.stability }} ${{ matrix.composer-flags }} --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare the application
+        run: |
+            php -r "file_exists('.env') || copy('.env.example', '.env');"
+            php artisan key:generate
+      - name: Clear Config
+        run: php artisan config:clear
+
+      - name: Run Migration
+        run: php artisan migrate -v
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --configuration phpunit.xml --verbose
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+
+      - name: Run PHP CS Fixer
+        if: ${{ matrix.experimental == false }}
+        run: tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -v --dry-run --using-cache=no || true
+
+      - name: Run PHPStan
+        if: ${{ matrix.experimental == false }}
+        run: vendor/bin/phpstan analyze -c phpstan.neon
